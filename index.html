@@ -4,63 +4,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Trans Truck — Panel de Flota</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Arial,sans-serif;background:#f4f4f0;color:#222;font-size:15px}
-  .topbar{background:#1a2e4a;color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-  .topbar-title{font-size:18px;font-weight:600;letter-spacing:.02em}
-  .topbar-sub{font-size:12px;opacity:.7;margin-top:2px}
-  .nav-tabs{display:flex;gap:4px}
-  .nav-tab{padding:8px 18px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:all .15s}
-  .nav-tab.op{background:#2563a8;color:#fff}
-  .nav-tab.op.active{background:#fff;color:#1a2e4a}
-  .nav-tab.ger{background:#166534;color:#fff}
-  .nav-tab.ger.active{background:#fff;color:#166534}
-  .sync-bar{background:#fff;border-bottom:1px solid #e0e0d8;padding:8px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .sync-btn{padding:6px 16px;background:#1a2e4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
-  .sync-btn:hover{background:#2563a8}
-  .sync-status{font-size:12px;color:#666}
-  .mes-sel{padding:5px 10px;border:1px solid #ccc;border-radius:6px;font-size:12px}
-  .section{display:none;padding:20px 24px}
-  .section.active{display:block}
-  .section-title{font-size:16px;font-weight:600;margin-bottom:16px;color:#1a2e4a;border-left:4px solid #2563a8;padding-left:10px;border-radius:0}
-  .section-title.green{border-color:#16a34a;color:#166534}
-  .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px}
-  .metric{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #e8e8e0}
-  .metric-label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
-  .metric-value{font-size:22px;font-weight:700;color:#1a2e4a}
-  .metric-value.green{color:#16a34a}
-  .metric-value.amber{color:#b45309}
-  .metric-value.red{color:#dc2626}
-  .metric-sub{font-size:11px;color:#aaa;margin-top:3px}
-  .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
-  .card{background:#fff;border-radius:10px;padding:16px;border:1px solid #e8e8e0}
-  .card-title{font-size:12px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px}
-  .table-wrap{overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:12px}
-  th{text-align:right;padding:7px 10px;background:#f8f8f4;color:#666;font-weight:600;font-size:11px;border-bottom:1px solid #e8e8e0}
-  th:first-child{text-align:left}
-  td{text-align:right;padding:7px 10px;border-bottom:1px solid #f0f0e8;color:#333}
-  td:first-child{text-align:left;font-weight:500;color:#1a2e4a}
-  tr:last-child td{border-bottom:none;background:#f8f8f4;font-weight:700}
-  .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
-  .badge-green{background:#dcfce7;color:#166534}
-  .badge-red{background:#fee2e2;color:#991b1b}
-  .badge-amber{background:#fef3c7;color:#92400e}
-  .pct-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
-  .pct-label{width:120px;font-size:12px;color:#555;flex-shrink:0}
-  .pct-bg{flex:1;height:8px;background:#f0f0e8;border-radius:4px;overflow:hidden}
-  .pct-fill{height:100%;border-radius:4px}
-  .pct-val{width:44px;text-align:right;font-size:12px;font-weight:600;color:#333}
-  .legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:#666}
-  .legend span{display:flex;align-items:center;gap:4px}
-  .leg-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0}
-  .loading{text-align:center;padding:40px;color:#888;font-size:14px}
-  .error-msg{background:#fee2e2;color:#991b1b;padding:12px 16px;border-radius:8px;font-size:13px;margin:12px 0}
-  .viajes-table td:first-child{font-size:11px;color:#555;font-weight:400}
-  @media(max-width:640px){.charts-row{grid-template-columns:1fr}.nav-tab{padding:7px 12px;font-size:12px}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f4f0;color:#222;font-size:14px}
+.topbar{background:#1a2e4a;color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.topbar-title{font-size:17px;font-weight:700}
+.topbar-sub{font-size:11px;opacity:.7;margin-top:2px}
+.nav-tabs{display:flex;gap:4px;flex-wrap:wrap}
+.nav-tab{padding:7px 14px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;opacity:.7;background:rgba(255,255,255,.15);color:#fff;transition:all .15s}
+.nav-tab.active{opacity:1;background:#fff;color:#1a2e4a}
+.syncbar{background:#fff;border-bottom:1px solid #ddd;padding:8px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sync-btn{padding:6px 14px;background:#1a2e4a;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600}
+.sync-btn:hover{background:#2563a8}
+.mes-sel{padding:5px 10px;border:1px solid #ccc;border-radius:6px;font-size:12px}
+.sync-st{font-size:11px;color:#888}
+.section{display:none;padding:16px 20px}
+.section.active{display:block}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:14px;color:#1a2e4a;border-left:4px solid #2563a8;padding-left:10px}
+.sec-title.green{border-color:#16a34a;color:#166534}
+.sec-title.amber{border-color:#d97706;color:#92400e}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:16px}
+.mc{background:#fff;border-radius:8px;padding:12px 14px;border:1px solid #e8e8e0}
+.mc-label{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.mc-val{font-size:20px;font-weight:700;color:#1a2e4a}
+.mc-val.green{color:#16a34a}
+.mc-val.amber{color:#b45309}
+.mc-val.red{color:#dc2626}
+.mc-sub{font-size:10px;color:#aaa;margin-top:2px}
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.card{background:#fff;border-radius:8px;padding:14px;border:1px solid #e8e8e0}
+.card-title{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.twrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{text-align:right;padding:6px 8px;background:#f8f8f4;color:#555;font-weight:700;font-size:10px;border-bottom:1px solid #e0e0d8;white-space:nowrap}
+th:first-child{text-align:left}
+td{text-align:right;padding:6px 8px;border-bottom:1px solid #f0f0e8;color:#333;white-space:nowrap}
+td:first-child{text-align:left;font-weight:600;color:#1a2e4a}
+tr.tot td{background:#f8f8f4;font-weight:700;border-top:1px solid #ddd}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700}
+.bg{background:#dcfce7;color:#166534}
+.ba{background:#fef3c7;color:#92400e}
+.br{background:#fee2e2;color:#991b1b}
+.prow{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.plabel{width:130px;font-size:11px;color:#555;flex-shrink:0}
+.pbg{flex:1;height:8px;background:#f0f0e8;border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px}
+.pval{width:48px;text-align:right;font-size:11px;font-weight:700;color:#333}
+.leg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:8px;font-size:10px;color:#666}
+.leg span{display:flex;align-items:center;gap:3px}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.loading{text-align:center;padding:30px;color:#888;font-size:13px}
+.errmsg{background:#fee2e2;color:#991b1b;padding:10px 14px;border-radius:7px;font-size:12px;margin:10px 0}
+@media(max-width:600px){.crow{grid-template-columns:1fr}.nav-tab{font-size:11px;padding:6px 10px}}
 </style>
 </head>
 <body>
@@ -68,458 +64,463 @@
 <div class="topbar">
   <div>
     <div class="topbar-title">Trans Truck — Panel de Flota</div>
-    <div class="topbar-sub" id="topbar-fecha">Cargando datos...</div>
+    <div class="topbar-sub" id="tfecha">Cargando...</div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab op active" onclick="setTab('op')">Operativo</button>
-    <button class="nav-tab ger" onclick="setTab('ger')">Gerencial</button>
+    <button class="nav-tab active" onclick="setTab('op')">Operativo</button>
+    <button class="nav-tab" onclick="setTab('cos')">Costos</button>
+    <button class="nav-tab" onclick="setTab('ger')">Gerencial</button>
   </div>
 </div>
 
-<div class="sync-bar">
+<div class="syncbar">
   <button class="sync-btn" onclick="cargarTodo()">Actualizar datos</button>
-  <select class="mes-sel" id="mesSelect" onchange="renderAll()">
-    <option value="">Cargando...</option>
-  </select>
-  <span class="sync-status" id="syncStatus">Conectando con Google Drive...</span>
+  <select class="mes-sel" id="mesSelect" onchange="renderAll()"><option>Cargando...</option></select>
+  <span class="sync-st" id="syncSt">Conectando...</span>
 </div>
 
-<div id="tab-op" class="section active">
-  <div id="op-content"><div class="loading">Cargando datos operativos...</div></div>
-</div>
-
-<div id="tab-ger" class="section">
-  <div id="ger-content"><div class="loading">Cargando datos gerenciales...</div></div>
-</div>
+<div id="tab-op" class="section active"><div class="loading">Cargando datos operativos...</div></div>
+<div id="tab-cos" class="section"><div class="loading">Cargando costos...</div></div>
+<div id="tab-ger" class="section"><div class="loading">Cargando datos gerenciales...</div></div>
 
 <script>
-const FILE_IDS = {
-  movimientos: '1YpvPdyZm-TGI1LQm3pBanZasQHo7reJT',
-  combustible: '1EQOwTiwMxmRb40KjDdD9aESsv8mjOvOt',
-  costos:      '1cPzKRqdMJeFhD0SLKwjc9B3-LPhiWDvN',
-  reportes:    '11eFsCczQxUWMtiYoJfxDOqk75vtMWyaj'
+const CSV = {
+  reportes:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdQY1Q10NBQxfPh1w2hQiIycQ8VS6wPkNrA84I6BqAwS05PXhv0YghfMhPanoGZg/pub?gid=842673272&single=true&output=csv',
+  movimientos:'https://docs.google.com/spreadsheets/d/e/2PACX-1vTg-TirU69Fo2OC15uTntENBItePoNJidPNAm4evwe55CyHPPdNEBSeBqv0f-Fe5w/pub?gid=408513105&single=true&output=csv',
+  combustible:'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9DYRCIqMGGEFAFfrrco-Ksha8qpIHq-u00Q-re3nJJGhcTYHmmIecPHmfA4nUgQ/pub?gid=1081696211&single=true&output=csv',
+  costosFijos:'https://docs.google.com/spreadsheets/d/e/2PACX-1vT9DYRCIqMGGEFAFfrrco-Ksha8qpIHq-u00Q-re3nJJGhcTYHmmIecPHmfA4nUgQ/pub?gid=209165186&single=true&output=csv',
+  mantenimiento:'https://docs.google.com/spreadsheets/d/e/2PACX-1vRJeUbLKVLpeJ31U3_5sxZob0hFxfSn-TL_CGZIgevbqS4heu16v2RF_kVGWMUAKA/pub?gid=826021015&single=true&output=csv'
 };
 
-let DATA = { mov: [], comb: [], costos: [], reportes: [] };
-let meses = [];
-let charts = {};
+let D = {rep:[],mov:[],comb:[],fijos:[],mant:[]};
+let meses=[], charts={};
 
-function gdUrl(id){ return `https://docs.google.com/spreadsheets/d/${id}/export?format=xlsx`; }
+const CCOL = {'AE817YC':'#185FA5','AE817YN':'#1D9E75','AG726GZ':'#D85A30','OAN502':'#854F0B','AG213SH':'#5F5E5A'};
+const CAMIONES = ['AE817YC','AE817YN','AG726GZ','OAN502'];
 
-async function fetchExcel(id){
-  const res = await fetch(gdUrl(id));
-  if(!res.ok) throw new Error(`Error al cargar archivo (${res.status})`);
-  const buf = await res.arrayBuffer();
-  return XLSX.read(buf, {type:'array', cellDates:true});
+function setSt(m){document.getElementById('syncSt').textContent=m}
+
+async function fetchCSV(url){
+  const r = await fetch(url+'&t='+Date.now());
+  if(!r.ok) throw new Error(r.status);
+  const txt = await r.text();
+  const lines = txt.trim().split('\n');
+  const headers = parseCSVLine(lines[0]);
+  return lines.slice(1).map(l=>{
+    const vals = parseCSVLine(l);
+    const obj={};
+    headers.forEach((h,i)=>obj[h.trim()]=(vals[i]||'').trim());
+    return obj;
+  });
 }
 
-function sheetToArr(wb, sheetName){
-  const ws = wb.Sheets[sheetName];
-  if(!ws) return [];
-  return XLSX.utils.sheet_to_json(ws, {defval:''});
+function parseCSVLine(line){
+  const res=[];let cur='';let inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){inQ=!inQ}
+    else if(c===','&&!inQ){res.push(cur);cur=''}
+    else cur+=c;
+  }
+  res.push(cur);
+  return res;
 }
 
-function setStatus(msg){ document.getElementById('syncStatus').textContent = msg; }
+function mesStr(v){
+  if(!v) return '';
+  const s = String(v).trim();
+  if(s.match(/^\d{4}-\d{2}/)) return s.substring(0,7);
+  const mmap={'enero':'01','febrero':'02','marzo':'03','abril':'04','mayo':'05','junio':'06','julio':'07','agosto':'08','septiembre':'09','octubre':'10','noviembre':'11','diciembre':'12'};
+  const low=s.toLowerCase();
+  for(const [n,num] of Object.entries(mmap)) if(low.includes(n)) return '2025-'+num;
+  return s.substring(0,7);
+}
+
+function fmtMes(m){
+  if(!m) return '';
+  const [y,mo]=m.split('-');
+  const ns=['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  return `${ns[parseInt(mo)]} ${y}`;
+}
+
+function fmtM(v){return '$'+(v/1000000).toFixed(1)+'M'}
+function fmtN(v){return Math.round(v).toLocaleString('es-AR')}
+function fmtP(v){return(v*100).toFixed(1)+'%'}
+function n(v){return parseFloat(v)||0}
+function getMes(){return document.getElementById('mesSelect').value}
+
+function setTab(t){
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelector(`[onclick="setTab('${t}')"]`).classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+}
+
+function dChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
 
 async function cargarTodo(){
-  setStatus('Conectando con Google Drive...');
-  try {
-    setStatus('Cargando movimientos...');
-    const wbMov = await fetchExcel(FILE_IDS.movimientos);
-    DATA.mov = sheetToArr(wbMov, 'Movimientos');
-
-    setStatus('Cargando combustible...');
-    const wbComb = await fetchExcel(FILE_IDS.combustible);
-    DATA.comb = sheetToArr(wbComb, 'CARGA COMBUSTIBLE');
-
-    setStatus('Cargando costos...');
-    const wbCos = await fetchExcel(FILE_IDS.costos);
-    DATA.costosFijos = sheetToArr(wbCos, 'Costos Fijos..');
-    DATA.costosVar = sheetToArr(wbCos, 'Gastos Mantenimiento');
-
-    setStatus('Cargando reportes...');
-    const wbRep = await fetchExcel(FILE_IDS.reportes);
-    DATA.reportes = sheetToArr(wbRep, 'BASE');
-
+  setSt('Conectando con Google Sheets...');
+  try{
+    setSt('Cargando reportes...');
+    D.rep = await fetchCSV(CSV.reportes);
+    setSt('Cargando movimientos...');
+    D.mov = await fetchCSV(CSV.movimientos);
+    setSt('Cargando combustible...');
+    D.comb = await fetchCSV(CSV.combustible);
+    setSt('Cargando costos fijos...');
+    D.fijos = await fetchCSV(CSV.costosFijos);
+    setSt('Cargando mantenimiento...');
+    D.mant = await fetchCSV(CSV.mantenimiento);
     procesarMeses();
     renderAll();
-    const ahora = new Date();
-    setStatus(`Actualizado: ${ahora.toLocaleDateString('es-AR')} ${ahora.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}`);
-    document.getElementById('topbar-fecha').textContent = `Datos al ${ahora.toLocaleDateString('es-AR', {day:'2-digit',month:'long',year:'numeric'})}`;
-  } catch(e) {
-    setStatus('Error al cargar. Verificar permisos de Drive.');
+    const now=new Date();
+    setSt(`Actualizado: ${now.toLocaleDateString('es-AR')} ${now.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}`);
+    document.getElementById('tfecha').textContent=`Datos al ${now.toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}`;
+  }catch(e){
+    setSt('Error al cargar. Verificá los permisos de Google Sheets.');
     console.error(e);
   }
 }
 
-function mesStr(d){
-  if(!d) return '';
-  if(typeof d === 'string') return d.substring(0,7);
-  if(d instanceof Date) return d.toISOString().substring(0,7);
-  return String(d).substring(0,7);
-}
-
 function procesarMeses(){
-  const set = new Set();
-  DATA.reportes.forEach(r=>{ const m = mesStr(r.Mes); if(m) set.add(m); });
-  DATA.mov.forEach(r=>{ const m = mesStr(r['Mes']); if(m) set.add(m); });
-  meses = [...set].filter(m=>m.match(/^\d{4}-\d{2}$/)).sort();
-  const sel = document.getElementById('mesSelect');
-  sel.innerHTML = meses.map(m=>`<option value="${m}">${fmtMes(m)}</option>`).join('');
-  if(meses.length) sel.value = meses[meses.length-1];
+  const set=new Set();
+  D.rep.forEach(r=>{const m=mesStr(r.Mes);if(m&&m.match(/^\d{4}-\d{2}$/))set.add(m);});
+  D.mov.forEach(r=>{const m=mesStr(r.Mes);if(m&&m.match(/^\d{4}-\d{2}$/))set.add(m);});
+  meses=[...set].sort();
+  const sel=document.getElementById('mesSelect');
+  sel.innerHTML=meses.map(m=>`<option value="${m}">${fmtMes(m)}</option>`).join('');
+  if(meses.length) sel.value=meses[meses.length-1];
 }
 
-function fmtMes(m){
-  const [y,mo] = m.split('-');
-  const nombres = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-  return `${nombres[parseInt(mo)]} ${y}`;
-}
+function renderAll(){renderOp();renderCos();renderGer();}
 
-function getMesActivo(){ return document.getElementById('mesSelect').value; }
-
-function fmtM(v){ return '$'+(v/1000000).toFixed(1)+'M'; }
-function fmtN(v){ return Math.round(v).toLocaleString('es-AR'); }
-function fmtPct(v){ return (v*100).toFixed(1)+'%'; }
-
-const CAMION_COLORS = {
-  'AE817YC':'#185FA5','AE817YN':'#1D9E75','AG726GZ':'#D85A30','OAN502':'#854F0B','AG213SH':'#5F5E5A'
-};
-
-function setTab(t){
-  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.nav-tab.${t}`).classList.add('active');
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.getElementById(`tab-${t}`).classList.add('active');
-}
-
-function renderAll(){
-  renderOperativo();
-  renderGerencial();
-}
-
-function destroyChart(id){
-  if(charts[id]){ charts[id].destroy(); delete charts[id]; }
-}
-
-function renderOperativo(){
-  const mes = getMesActivo();
-  const mov = DATA.mov.filter(r => mesStr(r['Mes'])===mes || mesStr(r['Fecha '])===mes);
-  const comb = DATA.comb.filter(r => {
-    const m = r.Mes ? String(r.Mes).padStart(2,'0') : '';
-    const y = mes.substring(0,4);
-    const mo = mes.substring(5,7);
-    return m === mo || mesStr(r.Fecha)===mes;
+function renderOp(){
+  const mes=getMes();
+  const mov=D.mov.filter(r=>mesStr(r.Mes)===mes||mesStr(r['Fecha '])===mes||mesStr(r.Fecha)===mes);
+  const comb=D.comb.filter(r=>{
+    const mo=mes.substring(5,7);
+    return String(r.Mes).trim()===String(parseInt(mo))||mesStr(r.Fecha)===mes;
   });
 
-  const camiones = ['AE817YC','AE817YN','AG726GZ','OAN502'];
-  const stats = {};
-  camiones.forEach(c=>{ stats[c]={viajes:0,kg:0,km:0,litros:0,lt100:[], chofer:''}; });
+  const st={};
+  CAMIONES.forEach(c=>st[c]={viajes:0,kg:0,km:0,litros:0,lt100s:[],chofer:''});
 
   mov.forEach(r=>{
-    const cam = String(r.Camion||'').trim();
-    if(!stats[cam]) return;
-    stats[cam].viajes++;
-    const kg = parseFloat(r['Neto ']||r['Neto']||0);
-    stats[cam].kg += kg>1000?kg:kg*1000;
-    const km = parseFloat(r['Km asfalto']||0);
-    stats[cam].km += km;
-    if(r.Chofer) stats[cam].chofer = String(r.Chofer).trim().split(' ')[0];
+    const cam=String(r.Camion||'').trim();
+    if(!st[cam])return;
+    st[cam].viajes++;
+    const kg=n(r['Neto ']||r.Neto||0);
+    st[cam].kg+=kg>1000?kg:kg*1000;
+    st[cam].km+=n(r['Km asfalto']||0);
+    if(r.Chofer&&!st[cam].chofer) st[cam].chofer=String(r.Chofer).trim().split(' ')[0];
   });
-
   comb.forEach(r=>{
-    const cam = String(r.Camion||'').trim();
-    if(!stats[cam]) return;
-    const lt = parseFloat(r.LT||0);
-    stats[cam].litros += lt;
-    const lt100 = parseFloat(r['Lt/100']||0);
-    if(lt100>0) stats[cam].lt100.push(lt100);
+    const cam=String(r.Camion||'').trim();
+    if(!st[cam])return;
+    st[cam].litros+=n(r.LT||0);
+    const l=n(r['Lt/100']||0);
+    if(l>0) st[cam].lt100s.push(l);
   });
 
-  const totViajes = camiones.reduce((a,c)=>a+stats[c].viajes,0);
-  const totKg = camiones.reduce((a,c)=>a+stats[c].kg,0);
-  const totLt = camiones.reduce((a,c)=>a+stats[c].litros,0);
-  const totKm = camiones.reduce((a,c)=>a+stats[c].km,0);
+  const totV=CAMIONES.reduce((a,c)=>a+st[c].viajes,0);
+  const totKg=CAMIONES.reduce((a,c)=>a+st[c].kg,0);
+  const totLt=CAMIONES.reduce((a,c)=>a+st[c].litros,0);
+  const totKm=CAMIONES.reduce((a,c)=>a+st[c].km,0);
 
-  let html = `
-  <div class="section-title">Movimiento operativo — ${fmtMes(mes)}</div>
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-label">Viajes del mes</div><div class="metric-value">${totViajes}</div></div>
-    <div class="metric"><div class="metric-label">Tn transportadas</div><div class="metric-value">${(totKg/1000).toFixed(0)}</div><div class="metric-sub">toneladas</div></div>
-    <div class="metric"><div class="metric-label">Km recorridos</div><div class="metric-value">${fmtN(totKm)}</div></div>
-    <div class="metric"><div class="metric-label">Litros cargados</div><div class="metric-value">${fmtN(totLt)}</div></div>
-    <div class="metric"><div class="metric-label">Camiones activos</div><div class="metric-value">${camiones.filter(c=>stats[c].viajes>0).length}</div></div>
+  const mercMap={};
+  mov.forEach(r=>{
+    const m=String(r.Mercaderia||'Sin datos').trim();
+    if(!mercMap[m])mercMap[m]=0;
+    const kg=n(r['Neto ']||r.Neto||0);
+    mercMap[m]+=kg>1000?kg:kg*1000;
+  });
+  const mercs=Object.entries(mercMap).sort((a,b)=>b[1]-a[1]);
+  const mColors=['#185FA5','#1D9E75','#D85A30','#854F0B','#7F77DD','#888780'];
+  const mercTot=mercs.reduce((a,e)=>a+e[1],0);
+
+  document.getElementById('tab-op').innerHTML=`
+  <div class="sec-title">Movimiento operativo — ${fmtMes(mes)}</div>
+  <div class="mgrid">
+    <div class="mc"><div class="mc-label">Viajes del mes</div><div class="mc-val">${totV}</div></div>
+    <div class="mc"><div class="mc-label">Tn transportadas</div><div class="mc-val">${(totKg/1000).toFixed(0)}</div><div class="mc-sub">toneladas</div></div>
+    <div class="mc"><div class="mc-label">Km recorridos</div><div class="mc-val">${fmtN(totKm)}</div></div>
+    <div class="mc"><div class="mc-label">Litros cargados</div><div class="mc-val">${fmtN(totLt)}</div></div>
+    <div class="mc"><div class="mc-label">Camiones activos</div><div class="mc-val">${CAMIONES.filter(c=>st[c].viajes>0).length}</div></div>
   </div>
-
-  <div class="charts-row">
+  <div class="crow">
     <div class="card">
-      <div class="card-title">Viajes y Tn por camión</div>
-      <div class="legend">
-        ${camiones.map(c=>`<span><span class="leg-dot" style="background:${CAMION_COLORS[c]}"></span>${c}</span>`).join('')}
-      </div>
-      <div style="position:relative;height:220px"><canvas id="chartViajes" role="img" aria-label="Viajes y toneladas por camión"></canvas></div>
+      <div class="card-title">Viajes por camión</div>
+      <div class="leg">${CAMIONES.map(c=>`<span><span class="ld" style="background:${CCOL[c]}"></span>${c}</span>`).join('')}</div>
+      <div style="position:relative;height:200px"><canvas id="cViajes" role="img" aria-label="Viajes por camión"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Consumo Lt/100km por camión</div>
-      <div style="position:relative;height:220px"><canvas id="chartConsumo" role="img" aria-label="Consumo de combustible por camión"></canvas></div>
+      <div class="card-title">Consumo Lt/100km</div>
+      <div style="position:relative;height:200px"><canvas id="cConsumo" role="img" aria-label="Consumo por camión"></canvas></div>
     </div>
   </div>
-
-  <div class="card" style="margin-bottom:20px">
-    <div class="card-title">Detalle por camión</div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th>Camión</th><th>Chofer</th><th>Viajes</th><th>Tn</th><th>Km</th><th>Litros</th><th>Lt/100km prom</th>
-      </tr></thead>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Detalle por camión — ${fmtMes(mes)}</div>
+    <div class="twrap"><table>
+      <thead><tr><th>Camión</th><th>Chofer</th><th>Viajes</th><th>Tn</th><th>Km</th><th>Litros</th><th>Lt/100km</th></tr></thead>
       <tbody>
-      ${camiones.map(c=>{
-        const s = stats[c];
-        const lt100prom = s.lt100.length ? (s.lt100.reduce((a,b)=>a+b,0)/s.lt100.length).toFixed(1) : '-';
-        const tn = (s.kg/1000).toFixed(1);
-        const activo = s.viajes>0;
-        return `<tr>
-          <td>${c}</td>
-          <td>${s.chofer||'-'}</td>
-          <td>${s.viajes}</td>
-          <td>${tn}</td>
-          <td>${fmtN(s.km)}</td>
-          <td>${fmtN(s.litros)}</td>
-          <td>${lt100prom}</td>
-        </tr>`;
+      ${CAMIONES.map(c=>{
+        const s=st[c];
+        const lt=s.lt100s.length?(s.lt100s.reduce((a,b)=>a+b,0)/s.lt100s.length).toFixed(1):'-';
+        return `<tr><td>${c}</td><td>${s.chofer||'-'}</td><td>${s.viajes}</td><td>${(s.kg/1000).toFixed(1)}</td><td>${fmtN(s.km)}</td><td>${fmtN(s.litros)}</td><td>${lt}</td></tr>`;
       }).join('')}
-      <tr><td>Total</td><td>-</td><td>${totViajes}</td><td>${(totKg/1000).toFixed(1)}</td><td>${fmtN(totKm)}</td><td>${fmtN(totLt)}</td><td>-</td></tr>
+      <tr class="tot"><td>Total</td><td>-</td><td>${totV}</td><td>${(totKg/1000).toFixed(1)}</td><td>${fmtN(totKm)}</td><td>${fmtN(totLt)}</td><td>-</td></tr>
       </tbody>
-    </table>
-    </div>
+    </table></div>
   </div>
-
-  <div class="card">
-    <div class="card-title">Mercaderías transportadas</div>
-    <div class="charts-row" style="margin-bottom:0">
-      <div style="position:relative;height:240px"><canvas id="chartMerc" role="img" aria-label="Distribución por tipo de mercadería"></canvas></div>
-      <div id="mercTable"></div>
+  <div class="crow">
+    <div class="card">
+      <div class="card-title">Mercaderías transportadas</div>
+      <div style="position:relative;height:220px"><canvas id="cMerc" role="img" aria-label="Mercaderías"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribución por Tn</div>
+      <div id="mercBars"></div>
     </div>
   </div>`;
 
-  document.getElementById('op-content').innerHTML = html;
-
-  destroyChart('chartViajes');
-  destroyChart('chartConsumo');
-  destroyChart('chartMerc');
-
-  charts['chartViajes'] = new Chart(document.getElementById('chartViajes'),{
+  dChart('cViajes');
+  charts['cViajes']=new Chart(document.getElementById('cViajes'),{
     type:'bar',
-    data:{
-      labels:camiones,
-      datasets:[
-        {label:'Viajes',data:camiones.map(c=>stats[c].viajes),backgroundColor:camiones.map(c=>CAMION_COLORS[c]),yAxisID:'y'},
-        {label:'Tn',data:camiones.map(c=>+(stats[c].kg/1000).toFixed(1)),backgroundColor:camiones.map(c=>CAMION_COLORS[c]+'44'),yAxisID:'y1',type:'bar'}
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{
-        y:{position:'left',ticks:{font:{size:10}},grid:{display:false},title:{display:true,text:'Viajes',font:{size:10}}},
-        y1:{position:'right',ticks:{font:{size:10}},grid:{display:false},title:{display:true,text:'Tn',font:{size:10}}}
-      }
-    }
+    data:{labels:CAMIONES,datasets:[
+      {label:'Viajes',data:CAMIONES.map(c=>st[c].viajes),backgroundColor:CAMIONES.map(c=>CCOL[c]),borderRadius:4},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{font:{size:10}}}}}
   });
 
-  const lt100data = camiones.map(c=>{ const s=stats[c]; return s.lt100.length?(s.lt100.reduce((a,b)=>a+b,0)/s.lt100.length).toFixed(1):0; });
-  charts['chartConsumo'] = new Chart(document.getElementById('chartConsumo'),{
+  dChart('cConsumo');
+  charts['cConsumo']=new Chart(document.getElementById('cConsumo'),{
     type:'bar',
-    data:{labels:camiones,datasets:[{label:'Lt/100km',data:lt100data,backgroundColor:camiones.map(c=>CAMION_COLORS[c]),borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},
-      scales:{x:{ticks:{font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}},y:{ticks:{font:{size:11}},grid:{display:false}}}
-    }
+    data:{labels:CAMIONES,datasets:[{label:'Lt/100km',data:CAMIONES.map(c=>{const s=st[c];return s.lt100s.length?+(s.lt100s.reduce((a,b)=>a+b,0)/s.lt100s.length).toFixed(1):0;}),backgroundColor:CAMIONES.map(c=>CCOL[c]),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:11}},grid:{display:false}}}}
   });
 
-  const mercMap = {};
-  mov.forEach(r=>{
-    const merc = String(r.Mercaderia||'Sin datos').trim();
-    if(!mercMap[merc]) mercMap[merc]=0;
-    const kg = parseFloat(r['Neto ']||r['Neto']||0);
-    mercMap[merc]+= kg>1000?kg:kg*1000;
-  });
-  const mercEntries = Object.entries(mercMap).sort((a,b)=>b[1]-a[1]);
-  const mercColors = ['#185FA5','#1D9E75','#D85A30','#854F0B','#7F77DD','#888780'];
-  charts['chartMerc'] = new Chart(document.getElementById('chartMerc'),{
+  dChart('cMerc');
+  charts['cMerc']=new Chart(document.getElementById('cMerc'),{
     type:'doughnut',
-    data:{labels:mercEntries.map(e=>e[0]),datasets:[{data:mercEntries.map(e=>+(e[1]/1000).toFixed(1)),backgroundColor:mercColors,borderWidth:2,borderColor:'#fff'}]},
+    data:{labels:mercs.map(e=>e[0]),datasets:[{data:mercs.map(e=>+(e[1]/1000).toFixed(1)),backgroundColor:mColors,borderWidth:2,borderColor:'#fff'}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
   });
 
-  const mercTot = mercEntries.reduce((a,e)=>a+e[1],0);
-  document.getElementById('mercTable').innerHTML = `
-    <div style="font-size:12px;color:#666;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em">Distribución</div>
-    ${mercEntries.map((e,i)=>`
-      <div class="pct-bar-row">
-        <span class="pct-label">${e[0]}</span>
-        <div class="pct-bg"><div class="pct-fill" style="width:${mercTot>0?(e[1]/mercTot*100).toFixed(0):0}%;background:${mercColors[i]||'#888'}"></div></div>
-        <span class="pct-val">${(e[1]/1000).toFixed(0)} Tn</span>
-      </div>`).join('')}`;
+  document.getElementById('mercBars').innerHTML=mercs.map((e,i)=>`
+    <div class="prow">
+      <span class="plabel">${e[0]}</span>
+      <div class="pbg"><div class="pfill" style="width:${mercTot>0?(e[1]/mercTot*100).toFixed(0):0}%;background:${mColors[i]||'#888'}"></div></div>
+      <span class="pval">${(e[1]/1000).toFixed(0)}Tn</span>
+    </div>`).join('');
 }
 
-function renderGerencial(){
-  const mes = getMesActivo();
-  const base = DATA.reportes.filter(r=>mesStr(r.Mes)===mes);
-  const camiones = ['AE817YC','AE817YN','AG726GZ','OAN502'];
+function renderCos(){
+  const mes=getMes();
+  const fijos=D.fijos.filter(r=>mesStr(r.Periodo)===mes&&String(r.EnUso||'').toLowerCase()==='si');
+  const mant=D.mant.filter(r=>mesStr(r.Mes)===mes);
+
+  const totFijo=fijos.reduce((a,r)=>a+n(r.Importe),0);
+  const mantPorTipo={};
+  mant.forEach(r=>{
+    const t=String(r.Tipo||'Otros').trim();
+    if(!mantPorTipo[t])mantPorTipo[t]=0;
+    mantPorTipo[t]+=n(r.Monto);
+  });
+  const totMant=Object.values(mantPorTipo).reduce((a,b)=>a+b,0);
+
+  const mantPorCam={};
+  CAMIONES.forEach(c=>mantPorCam[c]=0);
+  mant.forEach(r=>{
+    const cam=String(r.Patente||'').trim();
+    if(mantPorCam[cam]!==undefined) mantPorCam[cam]+=n(r.Monto);
+  });
+
+  const tipoEntries=Object.entries(mantPorTipo).sort((a,b)=>b[1]-a[1]);
+  const tColors=['#D85A30','#185FA5','#1D9E75','#854F0B','#7F77DD','#888780'];
+  const totTipo=tipoEntries.reduce((a,e)=>a+e[1],0);
+
+  const fijosPorCam={};
+  CAMIONES.forEach(c=>fijosPorCam[c]=0);
+  fijos.forEach(r=>{
+    const cam=String(r.Patente||'').trim();
+    if(fijosPorCam[cam]!==undefined) fijosPorCam[cam]+=n(r.Importe);
+  });
+
+  document.getElementById('tab-cos').innerHTML=`
+  <div class="sec-title amber">Composición de costos — ${fmtMes(mes)}</div>
+  <div class="mgrid">
+    <div class="mc"><div class="mc-label">Costos fijos total</div><div class="mc-val amber">${fmtM(totFijo)}</div></div>
+    <div class="mc"><div class="mc-label">Mantenimiento total</div><div class="mc-val amber">${fmtM(totMant)}</div></div>
+    <div class="mc"><div class="mc-label">Costo total</div><div class="mc-val red">${fmtM(totFijo+totMant)}</div></div>
+    <div class="mc"><div class="mc-label">% Mant sobre total</div><div class="mc-val">${totFijo+totMant>0?fmtP(totMant/(totFijo+totMant)):'-'}</div></div>
+  </div>
+  <div class="crow">
+    <div class="card">
+      <div class="card-title">Tipo de gasto en mantenimiento</div>
+      <div style="position:relative;height:220px"><canvas id="cTipos" role="img" aria-label="Tipos de gasto mantenimiento"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Peso por tipo</div>
+      ${tipoEntries.map((e,i)=>`
+        <div class="prow">
+          <span class="plabel">${e[0]}</span>
+          <div class="pbg"><div class="pfill" style="width:${totTipo>0?(e[1]/totTipo*100).toFixed(0):0}%;background:${tColors[i]||'#888'}"></div></div>
+          <span class="pval">${fmtM(e[1])}</span>
+        </div>`).join('')}
+    </div>
+  </div>
+  <div class="crow">
+    <div class="card">
+      <div class="card-title">Costos fijos por camión</div>
+      <div style="position:relative;height:200px"><canvas id="cFijos" role="img" aria-label="Costos fijos por camión"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Mantenimiento por camión</div>
+      <div style="position:relative;height:200px"><canvas id="cMantCam" role="img" aria-label="Mantenimiento por camión"></canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Detalle gastos de mantenimiento — ${fmtMes(mes)}</div>
+    <div class="twrap"><table>
+      <thead><tr><th>Fecha</th><th>Camión</th><th>Chofer</th><th>Tipo</th><th>Monto</th><th>Descripción</th></tr></thead>
+      <tbody>
+      ${mant.sort((a,b)=>n(b.Monto)-n(a.Monto)).map(r=>`
+        <tr><td>${String(r.Fecha||'').substring(0,10)}</td><td>${r.Patente||'-'}</td><td>${r.Chofer||'-'}</td><td>${r.Tipo||'-'}</td><td>$${fmtN(n(r.Monto))}</td><td>${r.Descripcion||'-'}</td></tr>
+      `).join('')}
+      <tr class="tot"><td colspan="4">Total</td><td>$${fmtN(totMant)}</td><td></td></tr>
+      </tbody>
+    </table></div>
+  </div>`;
+
+  dChart('cTipos');
+  charts['cTipos']=new Chart(document.getElementById('cTipos'),{
+    type:'doughnut',
+    data:{labels:tipoEntries.map(e=>e[0]),datasets:[{data:tipoEntries.map(e=>+(e[1]/1000).toFixed(0)),backgroundColor:tColors,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+  });
+
+  dChart('cFijos');
+  charts['cFijos']=new Chart(document.getElementById('cFijos'),{
+    type:'bar',
+    data:{labels:CAMIONES,datasets:[{label:'Fijos $',data:CAMIONES.map(c=>Math.round(fijosPorCam[c]/1000)),backgroundColor:CAMIONES.map(c=>CCOL[c]),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>'$'+v+'K',font:{size:10}}}}}
+  });
+
+  dChart('cMantCam');
+  charts['cMantCam']=new Chart(document.getElementById('cMantCam'),{
+    type:'bar',
+    data:{labels:CAMIONES,datasets:[{label:'Mant $',data:CAMIONES.map(c=>Math.round(mantPorCam[c]/1000)),backgroundColor:CAMIONES.map(c=>CCOL[c]),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>'$'+v+'K',font:{size:10}}}}}
+  });
+}
+
+function renderGer(){
+  const mes=getMes();
+  const base=D.rep.filter(r=>mesStr(r.Mes)===mes);
 
   if(!base.length){
-    document.getElementById('ger-content').innerHTML = `<div class="error-msg">No hay datos de reportes para ${fmtMes(mes)}. Verificá que la planilla REPORTES tenga datos para este mes.</div>`;
+    document.getElementById('tab-ger').innerHTML=`<div class="errmsg">No hay datos de reportes para ${fmtMes(mes)}.</div>`;
     return;
   }
 
-  const totFact = base.reduce((a,r)=>a+(parseFloat(r.Facturacion_Bruta_$)||0),0);
-  const totCosto = base.reduce((a,r)=>a+(parseFloat(r.Costo_Total_$)||0),0);
-  const totMargen = base.reduce((a,r)=>a+(parseFloat(r.Margen_$)||0),0);
-  const pctMargen = totFact>0 ? totMargen/totFact : 0;
-  const totViajes = base.reduce((a,r)=>a+(parseFloat(r.Viajes)||0),0);
+  const totF=base.reduce((a,r)=>a+n(r.Facturacion_Bruta_$),0);
+  const totC=base.reduce((a,r)=>a+n(r.Costo_Total_$),0);
+  const totM=base.reduce((a,r)=>a+n(r.Margen_$),0);
+  const pct=totF>0?totM/totF:0;
+  const totV=base.reduce((a,r)=>a+n(r.Viajes),0);
 
-  const historico = [];
-  const mesesHist = meses.filter(m=>m<=mes).slice(-6);
-  mesesHist.forEach(m=>{
-    const rows = DATA.reportes.filter(r=>mesStr(r.Mes)===m);
-    if(rows.length){
-      historico.push({
-        mes:m,
-        fact: rows.reduce((a,r)=>a+(parseFloat(r.Facturacion_Bruta_$)||0),0),
-        costo: rows.reduce((a,r)=>a+(parseFloat(r.Costo_Total_$)||0),0),
-        margen: rows.reduce((a,r)=>a+(parseFloat(r.Margen_$)||0),0),
-      });
-    }
+  const hist=[];
+  meses.filter(m=>m<=mes).slice(-6).forEach(m=>{
+    const rows=D.rep.filter(r=>mesStr(r.Mes)===m);
+    if(rows.length) hist.push({
+      mes:m,
+      f:rows.reduce((a,r)=>a+n(r.Facturacion_Bruta_$),0),
+      c:rows.reduce((a,r)=>a+n(r.Costo_Total_$),0),
+      m:rows.reduce((a,r)=>a+n(r.Margen_$),0),
+    });
   });
 
-  let html = `
-  <div class="section-title green">Resumen gerencial — ${fmtMes(mes)}</div>
-  <div class="metrics-grid">
-    <div class="metric"><div class="metric-label">Facturación bruta</div><div class="metric-value">${fmtM(totFact)}</div></div>
-    <div class="metric"><div class="metric-label">Costo total</div><div class="metric-value amber">${fmtM(totCosto)}</div></div>
-    <div class="metric"><div class="metric-label">Margen</div><div class="metric-value green">${fmtM(totMargen)}</div><div class="metric-sub">${fmtPct(pctMargen)} del total</div></div>
-    <div class="metric"><div class="metric-label">Viajes facturados</div><div class="metric-value">${fmtN(totViajes)}</div></div>
-    <div class="metric"><div class="metric-label">Ingreso x km prom</div><div class="metric-value">${base.length?'$'+Math.round(base.reduce((a,r)=>a+(parseFloat(r.Ingreso_km)||0),0)/base.length).toLocaleString('es-AR'):'-'}</div></div>
-  </div>
+  const baseFilt=base.filter(r=>n(r.Facturacion_Bruta_$)>0);
 
-  <div class="charts-row">
+  document.getElementById('tab-ger').innerHTML=`
+  <div class="sec-title green">Resumen gerencial — ${fmtMes(mes)}</div>
+  <div class="mgrid">
+    <div class="mc"><div class="mc-label">Facturación bruta</div><div class="mc-val">${fmtM(totF)}</div></div>
+    <div class="mc"><div class="mc-label">Costo total</div><div class="mc-val amber">${fmtM(totC)}</div></div>
+    <div class="mc"><div class="mc-label">Margen</div><div class="mc-val green">${fmtM(totM)}</div><div class="mc-sub">${fmtP(pct)} del total</div></div>
+    <div class="mc"><div class="mc-label">Viajes facturados</div><div class="mc-val">${fmtN(totV)}</div></div>
+  </div>
+  <div class="crow">
     <div class="card">
       <div class="card-title">Facturación vs costo — últimos 6 meses</div>
-      <div class="legend">
-        <span><span class="leg-dot" style="background:#185FA5"></span>Facturación</span>
-        <span><span class="leg-dot" style="background:#D85A30"></span>Costo</span>
-        <span><span class="leg-dot" style="background:#1D9E75"></span>Margen</span>
+      <div class="leg">
+        <span><span class="ld" style="background:#185FA5"></span>Facturación</span>
+        <span><span class="ld" style="background:#D85A30"></span>Costo</span>
+        <span><span class="ld" style="background:#1D9E75"></span>Margen</span>
       </div>
-      <div style="position:relative;height:220px"><canvas id="chartHist" role="img" aria-label="Histórico facturación costo margen"></canvas></div>
+      <div style="position:relative;height:210px"><canvas id="cHist" role="img" aria-label="Histórico"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">% Margen por mes</div>
-      <div style="position:relative;height:220px"><canvas id="chartPctMargen" role="img" aria-label="Porcentaje de margen por mes"></canvas></div>
+      <div style="position:relative;height:210px"><canvas id="cPct" role="img" aria-label="Porcentaje margen"></canvas></div>
     </div>
   </div>
-
-  <div class="card" style="margin-bottom:20px">
+  <div class="card" style="margin-bottom:16px">
     <div class="card-title">Rentabilidad por camión — ${fmtMes(mes)}</div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr>
-        <th>Camión</th><th>Facturación</th><th>Costo total</th><th>Margen $</th><th>% Margen</th><th>Costo/km</th><th>Ing/km</th><th>Viajes</th>
-      </tr></thead>
+    <div class="twrap"><table>
+      <thead><tr><th>Camión</th><th>Facturación</th><th>Costo</th><th>Margen $</th><th>% Margen</th><th>Costo/km</th><th>Ing/km</th><th>Viajes</th></tr></thead>
       <tbody>
-      ${base.filter(r=>parseFloat(r.Facturacion_Bruta_$)>0).map(r=>{
-        const fact = parseFloat(r.Facturacion_Bruta_$)||0;
-        const costo = parseFloat(r.Costo_Total_$)||0;
-        const margen = parseFloat(r.Margen_$)||0;
-        const pct = fact>0?margen/fact:0;
-        const costkm = parseFloat(r['Costo_total/km'])||0;
-        const ingkm = parseFloat(r.Ingreso_km)||0;
-        const cls = pct>=0.45?'badge-green':pct>=0.3?'badge-amber':'badge-red';
-        return `<tr>
-          <td>${r.Camion}</td>
-          <td>${fmtM(fact)}</td>
-          <td>${fmtM(costo)}</td>
-          <td style="color:${margen>0?'#16a34a':'#dc2626'}">${fmtM(margen)}</td>
-          <td><span class="badge ${cls}">${fmtPct(pct)}</span></td>
-          <td>$${fmtN(costkm)}</td>
-          <td>$${fmtN(ingkm)}</td>
-          <td>${r.Viajes||0}</td>
-        </tr>`;
+      ${baseFilt.map(r=>{
+        const f=n(r.Facturacion_Bruta_$),c=n(r.Costo_Total_$),m=n(r.Margen_$);
+        const p=f>0?m/f:0;
+        const cls=p>=0.45?'bg':p>=0.3?'ba':'br';
+        return `<tr><td>${r.Camion}</td><td>${fmtM(f)}</td><td>${fmtM(c)}</td><td style="color:${m>0?'#16a34a':'#dc2626'}">${fmtM(m)}</td><td><span class="badge ${cls}">${fmtP(p)}</span></td><td>$${fmtN(n(r['Costo_total/km']))}</td><td>$${fmtN(n(r.Ingreso_km))}</td><td>${r.Viajes||0}</td></tr>`;
       }).join('')}
-      <tr><td>Total</td><td>${fmtM(totFact)}</td><td>${fmtM(totCosto)}</td><td>${fmtM(totMargen)}</td><td>${fmtPct(pctMargen)}</td><td>-</td><td>-</td><td>${fmtN(totViajes)}</td></tr>
+      <tr class="tot"><td>Total</td><td>${fmtM(totF)}</td><td>${fmtM(totC)}</td><td>${fmtM(totM)}</td><td>${fmtP(pct)}</td><td>-</td><td>-</td><td>${fmtN(totV)}</td></tr>
       </tbody>
-    </table>
-    </div>
+    </table></div>
   </div>
-
-  <div class="charts-row">
-    <div class="card">
-      <div class="card-title">Costo/km por camión</div>
-      <div style="position:relative;height:200px"><canvas id="chartCostKm" role="img" aria-label="Costo por km por camión"></canvas></div>
-    </div>
+  <div class="crow">
     <div class="card">
       <div class="card-title">Margen por camión</div>
-      <div style="position:relative;height:200px"><canvas id="chartMargenCam" role="img" aria-label="Margen por camión"></canvas></div>
+      <div style="position:relative;height:200px"><canvas id="cMargCam" role="img" aria-label="Margen por camión"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Costo/km por camión</div>
+      <div style="position:relative;height:200px"><canvas id="cCostKm" role="img" aria-label="Costo km por camión"></canvas></div>
     </div>
   </div>`;
 
-  document.getElementById('ger-content').innerHTML = html;
-
-  destroyChart('chartHist');
-  destroyChart('chartPctMargen');
-  destroyChart('chartCostKm');
-  destroyChart('chartMargenCam');
-
-  charts['chartHist'] = new Chart(document.getElementById('chartHist'),{
+  dChart('cHist');
+  charts['cHist']=new Chart(document.getElementById('cHist'),{
     type:'bar',
-    data:{
-      labels:historico.map(h=>fmtMes(h.mes).substring(0,3)+' '+h.mes.substring(2,4)),
-      datasets:[
-        {label:'Facturación',data:historico.map(h=>+(h.fact/1e6).toFixed(2)),backgroundColor:'#B5D4F4',borderColor:'#185FA5',borderWidth:1},
-        {label:'Costo',data:historico.map(h=>+(h.costo/1e6).toFixed(2)),backgroundColor:'#F5C4B3',borderColor:'#D85A30',borderWidth:1},
-        {label:'Margen',data:historico.map(h=>+(h.margen/1e6).toFixed(2)),backgroundColor:'#9FE1CB',borderColor:'#1D9E75',borderWidth:1},
-      ]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{autoSkip:false,font:{size:10}},grid:{display:false}},
-        y:{ticks:{callback:v=>'$'+v+'M',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}
-      }
-    }
+    data:{labels:hist.map(h=>fmtMes(h.mes).substring(0,3)+' '+h.mes.substring(2,4)),datasets:[
+      {label:'Facturación',data:hist.map(h=>+(h.f/1e6).toFixed(2)),backgroundColor:'#B5D4F4',borderColor:'#185FA5',borderWidth:1},
+      {label:'Costo',data:hist.map(h=>+(h.c/1e6).toFixed(2)),backgroundColor:'#F5C4B3',borderColor:'#D85A30',borderWidth:1},
+      {label:'Margen',data:hist.map(h=>+(h.m/1e6).toFixed(2)),backgroundColor:'#9FE1CB',borderColor:'#1D9E75',borderWidth:1},
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{autoSkip:false,font:{size:10}},grid:{display:false}},y:{ticks:{callback:v=>'$'+v+'M',font:{size:10}}}}}
   });
 
-  charts['chartPctMargen'] = new Chart(document.getElementById('chartPctMargen'),{
+  dChart('cPct');
+  charts['cPct']=new Chart(document.getElementById('cPct'),{
     type:'line',
-    data:{
-      labels:historico.map(h=>fmtMes(h.mes).substring(0,3)+' '+h.mes.substring(2,4)),
-      datasets:[{label:'% Margen',data:historico.map(h=>h.fact>0?+(h.margen/h.fact*100).toFixed(1):0),
-        borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.08)',borderWidth:2,
-        pointRadius:4,pointBackgroundColor:'#1D9E75',fill:true,tension:0.3}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{autoSkip:false,font:{size:10}},grid:{display:false}},
-        y:{ticks:{callback:v=>v+'%',font:{size:10}},min:0,max:70,grid:{color:'rgba(0,0,0,0.05)'}}
-      }
-    }
+    data:{labels:hist.map(h=>fmtMes(h.mes).substring(0,3)+' '+h.mes.substring(2,4)),datasets:[{label:'% Margen',data:hist.map(h=>h.f>0?+(h.m/h.f*100).toFixed(1):0),borderColor:'#1D9E75',backgroundColor:'rgba(29,158,117,0.08)',borderWidth:2,pointRadius:4,pointBackgroundColor:'#1D9E75',fill:true,tension:0.3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{autoSkip:false,font:{size:10}},grid:{display:false}},y:{ticks:{callback:v=>v+'%',font:{size:10}},min:0,max:70}}}
   });
 
-  const baseFilt = base.filter(r=>parseFloat(r.Facturacion_Bruta_$)>0);
-  charts['chartCostKm'] = new Chart(document.getElementById('chartCostKm'),{
+  dChart('cMargCam');
+  charts['cMargCam']=new Chart(document.getElementById('cMargCam'),{
     type:'bar',
-    data:{labels:baseFilt.map(r=>r.Camion),datasets:[{label:'$/km',data:baseFilt.map(r=>Math.round(parseFloat(r['Costo_total/km'])||0)),
-      backgroundColor:baseFilt.map(r=>CAMION_COLORS[r.Camion]||'#888'),borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},
-      scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString('es-AR'),font:{size:10}}},y:{ticks:{font:{size:11}},grid:{display:false}}}
-    }
+    data:{labels:baseFilt.map(r=>r.Camion),datasets:[{label:'Margen $M',data:baseFilt.map(r=>+((n(r.Margen_$))/1e6).toFixed(2)),backgroundColor:baseFilt.map(r=>CCOL[r.Camion]||'#888'),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{ticks:{callback:v=>'$'+v+'M',font:{size:10}}}}}
   });
 
-  charts['chartMargenCam'] = new Chart(document.getElementById('chartMargenCam'),{
+  dChart('cCostKm');
+  charts['cCostKm']=new Chart(document.getElementById('cCostKm'),{
     type:'bar',
-    data:{labels:baseFilt.map(r=>r.Camion),datasets:[{label:'Margen $M',data:baseFilt.map(r=>+((parseFloat(r.Margen_$)||0)/1e6).toFixed(2)),
-      backgroundColor:baseFilt.map(r=>CAMION_COLORS[r.Camion]||'#888'),borderRadius:4}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{font:{size:10}},grid:{display:false}},
-        y:{ticks:{callback:v=>'$'+v+'M',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}
-      }
-    }
+    data:{labels:baseFilt.map(r=>r.Camion),datasets:[{label:'$/km',data:baseFilt.map(r=>Math.round(n(r['Costo_total/km']))),backgroundColor:baseFilt.map(r=>CCOL[r.Camion]||'#888'),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString('es-AR'),font:{size:10}}},y:{ticks:{font:{size:11}},grid:{display:false}}}}
   });
 }
 
