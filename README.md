@@ -1,2 +1,2 @@
-# transtruck
-Panel de informes de camiones
+# TransTruck
+Panel de Informe de Tans Truck
